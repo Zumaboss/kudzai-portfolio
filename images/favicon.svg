@@ -1,11 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
   <defs>
-    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#1C2D47"/>
-      <stop offset="100%" stop-color="#203C5C"/>
-    </linearGradient>
+    <radialGradient id="gold" cx="50%" cy="50%" r="75%">
+      <stop offset="0%" stop-color="#F9E2A1"/>
+      <stop offset="45%" stop-color="#D9B34A"/>
+      <stop offset="100%" stop-color="#B38B30"/>
+    </radialGradient>
   </defs>
-  <rect width="256" height="256" rx="32" fill="url(#grad)"/>
-  <circle cx="128" cy="128" r="98" fill="#0F1B2C" opacity="0.9"/>
-  <text x="128" y="168" text-anchor="middle" font-family="Playfair Display, serif" font-size="120" fill="#D8B16A" font-weight="700">KM</text>
+  <rect width="256" height="256" fill="#0A1220"/>
+  <circle cx="128" cy="128" r="96" fill="url(#gold)"/>
+  <circle cx="128" cy="128" r="86" fill="#0A1220" opacity="0.16"/>
+  <text x="128" y="160" text-anchor="middle" font-family="Playfair Display, serif" font-size="108" fill="#F7D770" font-weight="700">KM</text>
 </svg>
