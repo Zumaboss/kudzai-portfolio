@@ -12,7 +12,6 @@ function updateThemeToggle(theme) {
   const toggle = document.querySelector('.theme-toggle');
   if (!toggle) return;
   const isDark = theme === 'dark';
-  toggle.textContent = isDark ? '☀️' : '🌙';
   toggle.setAttribute('aria-pressed', String(isDark));
   toggle.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
 }
