@@ -8,6 +8,35 @@ const obs = new IntersectionObserver((entries) => {
 }, { threshold: 0.08 });
 document.querySelectorAll('.reveal').forEach(r => obs.observe(r));
 
+function updateThemeToggle(theme) {
+  const toggle = document.querySelector('.theme-toggle');
+  if (!toggle) return;
+  const isDark = theme === 'dark';
+  toggle.textContent = isDark ? 'Light' : 'Dark';
+  toggle.setAttribute('aria-pressed', String(isDark));
+  toggle.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+}
+
+function setTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+  updateThemeToggle(theme);
+}
+
+function initTheme() {
+  const storedTheme = localStorage.getItem('theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const theme = storedTheme || (prefersDark ? 'dark' : 'light');
+  setTheme(theme);
+
+  const toggle = document.querySelector('.theme-toggle');
+  if (!toggle) return;
+  toggle.addEventListener('click', () => {
+    const nextTheme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('theme', nextTheme);
+    setTheme(nextTheme);
+  });
+}
+
 function handleSubmit(e) {
   e.preventDefault();
   const form = e.target;
@@ -59,6 +88,7 @@ function handleSubmit(e) {
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.querySelector('form.form-grid');
   if (form) form.addEventListener('submit', handleSubmit);
+  initTheme();
 });
 
 // Lightbox functionality

@@ -17,6 +17,25 @@
   --overlay:   rgba(27,20,13,0.06);
 }
 
+[data-theme="dark"] {
+  --bg:        #0f0c08;
+  --card:      #1d1912;
+  --card2:     #27231b;
+  --text:      #f5eee1;
+  --text-sec:  #d4c59f;
+  --text-body: #c7b78d;
+  --accent:    #b8943f;
+  --accent-dk: #f3dc9c;
+  --accent-decor: #d0b267;
+  --border:    rgba(248,229,157,0.12);
+  --border2:   rgba(248,229,157,0.24);
+  --faint:     rgba(248,229,157,0.14);
+  --faint2:    rgba(248,229,157,0.08);
+  --accent-06: rgba(248,229,157,0.06);
+  --accent-07: rgba(248,229,157,0.08);
+  --overlay:   rgba(5,3,2,0.8);
+}
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 body {
@@ -32,12 +51,22 @@ body {
 nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   display: flex; justify-content: space-between; align-items: center;
+  gap: 1rem;
   padding: 1.4rem 5rem;
   background: rgba(250,247,242,0.92);
   backdrop-filter: blur(18px);
   border-bottom: 1px solid var(--border);
   transition: padding 0.3s ease;
 }
+.theme-toggle {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 5rem; padding: 0.75rem 1rem;
+  border-radius: 999px; border: 1px solid var(--border);
+  background: transparent; color: var(--text-sec);
+  font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase;
+  cursor: pointer; transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+.theme-toggle:hover, .theme-toggle:focus-visible { color: var(--accent-dk); border-color: var(--accent-decor); background: var(--accent-06); }
 .nav-logo {
   font-family: 'Playfair Display', serif;
   font-size: 1.15rem; font-weight: 500; letter-spacing: 0.05em;
