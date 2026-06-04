@@ -99,6 +99,7 @@ for fgk,bgk,label in pairs:
     ratio = contrast_ratio(fgc,bgc)
     results.append((label, fgk,bgk, round(ratio,2)))
 
+print('=== LIGHT THEME CONTRAST RESULTS ===')
 print('Contrast results (WCAG):')
 for r in results:
     print(f"- {r[0]}: {r[3]}")
@@ -111,8 +112,74 @@ else:
     for f in fails:
         print(f"- {f[0]}: {f[3]}")
 
-# Suggestion: list ratios <7 (for AAA large text) as informational
-info = [r for r in results if isinstance(r[3], (int,float)) and r[3] < 7]
-print('\nInformational (ratios < 7):')
-for i in info:
-    print(f"- {i[0]}: {i[3]}")
+# Parse dark theme variables
+print('\n\n=== DARK THEME CONTRAST AUDIT ===')
+m_dark = re.search(r'\[data-theme="dark"\]\s*\{([^}]*)\}', css, re.S)
+dark_vars_raw = m_dark.group(1) if m_dark else ''
+dark_vars = {}
+for line in dark_vars_raw.splitlines():
+    line = line.strip()
+    if line.startswith('--'):
+        try:
+            k,v = line.split(':',1)
+            k = k.strip()[2:]
+            v = v.strip().rstrip(';')
+            dark_vars[k]=v
+        except Exception:
+            continue
+
+dark_color_vars = {}
+for k,v in dark_vars.items():
+    c = parse_color(v)
+    dark_color_vars[k]=c
+
+# Dark theme accent pairs to check
+dark_pairs = [
+    ('accent','bg','Accent on dark background'),
+    ('accent','card','Accent on dark card'),
+    ('accent','card2','Accent on dark card2'),
+    ('accent-dk','bg','Accent-dk on dark background'),
+    ('accent-dk','card','Accent-dk on dark card'),
+    ('accent-dk','card2','Accent-dk on dark card2'),
+    ('accent-decor','bg','Accent-decor on dark background'),
+    ('accent-decor','card','Accent-decor on dark card'),
+    ('accent-decor','card2','Accent-decor on dark card2'),
+]
+
+dark_results = []
+for fgk,bgk,label in dark_pairs:
+    fg = dark_color_vars.get(fgk)
+    bg = dark_color_vars.get(bgk)
+    if fg is None or bg is None:
+        dark_results.append((label, fgk,bgk, 'MISSING'))
+        continue
+    if fg[3]<1.0:
+        fgc = composite(fg, bg)
+    else:
+        fgc = fg
+    if bg[3]<1.0:
+        bgc = composite(bg, (0,0,0,1))
+    else:
+        bgc = bg
+    ratio = contrast_ratio(fgc,bgc)
+    dark_results.append((label, fgk,bgk, round(ratio,2)))
+
+print('\nDark theme accent color contrast ratios:')
+for r in dark_results:
+    status = '✓ PASS' if isinstance(r[3], (int,float)) and r[3] >= 4.5 else ('⚠ WARN' if isinstance(r[3], (int,float)) and r[3] >= 3.0 else '✗ FAIL')
+    print(f"- {status}: {r[0]}: {r[3]}")
+
+dark_fails_aa = [r for r in dark_results if isinstance(r[3], (int,float)) and r[3] < 4.5]
+dark_fails_aaa = [r for r in dark_results if isinstance(r[3], (int,float)) and r[3] < 3.0]
+
+print(f'\n✗ WCAG AA failures (< 4.5): {len(dark_fails_aa)}')
+if dark_fails_aa:
+    for f in dark_fails_aa:
+        print(f"  - {f[0]}: {f[3]}")
+
+print(f'\n✗ WCAG AAA failures (< 3.0): {len(dark_fails_aaa)}')
+if dark_fails_aaa:
+    for f in dark_fails_aaa:
+        print(f"  - {f[0]}: {f[3]}")
+else:
+    print('  None — all decorative uses meet minimum contrast.')
