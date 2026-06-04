@@ -428,22 +428,69 @@ footer p { font-size: 0.72rem; color: var(--faint); letter-spacing: 0.08em; }
 
 /* RESPONSIVE */
 @media (max-width: 900px) {
-  nav { padding: 1.2rem 2rem; }
-  .nav-links { gap: 1.2rem; }
+  nav { padding: 1rem 1.5rem; }
+  .nav-links { gap: 1rem; }
   #home { grid-template-columns: 1fr; }
   .hero-right { height: 72vw; order: -1; }
-  .hero-left { padding: 3rem 2rem; }
+  .hero-left { padding: 3rem 1.5rem; }
   .stats { grid-template-columns: 1fr 1fr; }
   .stat { border-right: none; border-bottom: 1px solid var(--border); }
-  #services, #work, #portfolio, #education, #about, #contact { padding: 4rem 2rem; }
+  #services, #work, #portfolio, #education, #about, #contact { padding: 4rem 1.5rem; }
   .services-layout, .portfolio-grid, .edu-grid { grid-template-columns: 1fr; }
   .svc.featured, .svc.wide { grid-column: 1; grid-template-columns: 1fr; }
   #about, #contact { grid-template-columns: 1fr; gap: 3rem; }
   .form-row { grid-template-columns: 1fr; }
   footer { flex-direction: column; gap: 1rem; padding: 2rem; text-align: center; }
   nav { flex-wrap: wrap; }
-  .nav-links { flex-wrap: wrap; justify-content: center; gap: 1rem; }
-  .nav-links a { font-size: 0.75rem; }
+  .nav-links { flex-wrap: wrap; justify-content: center; gap: 0.75rem; }
+  .nav-links a { font-size: 0.7rem; }
+}
+
+@media (max-width: 768px) {
+  .hero-left { padding: 2.5rem 1.25rem; }
+  .hero-right { height: 68vw; }
+  .hero-tag { margin-bottom: 1.4rem; }
+  .hero-sub { max-width: 100%; }
+  .hero-qual { gap: 0.5rem; }
+  .hero-badge { right: 1rem; bottom: 2rem; padding: 0.9rem 1.2rem; }
+  .btn-accent, .btn-submit { padding: 0.85rem 1.8rem; font-size: 0.65rem; }
+  .stats { grid-template-columns: 1fr; }
+  .portfolio-gallery img,
+  .portfolio-gallery video { max-width: 48%; margin-right: 0; margin-bottom: 0.5rem; }
+  .portfolio-gallery { display: flex; flex-wrap: wrap; justify-content: space-between; }
+  .portfolio-gallery img:last-child,
+  .portfolio-gallery video:last-child { margin-bottom: 0; }
+  .portfolio-card { margin-bottom: 1.2rem; }
+  .nav-logo { flex: 1 1 100%; text-align: center; }
+}
+
+@media (max-width: 600px) {
+  body { font-size: 0.95rem; }
+  nav { padding: 0.9rem 1rem; }
+  .hero-left { padding: 2rem 1rem; }
+  .hero-right { height: 80vw; }
+  .hero-tag { font-size: 0.6rem; }
+  .hero-name { font-size: clamp(2.6rem, 8vw, 3.6rem); }
+  .hero-qual span { padding: 0.3rem 0.75rem; }
+  .btn-accent, .btn-submit { width: 100%; text-align: center; }
+  .portfolio-gallery img,
+  .portfolio-gallery video { max-width: 100%; }
+  .portfolio-gallery { justify-content: flex-start; }
+  .hero-badge { right: 0.9rem; bottom: 1.5rem; }
+  .nav-links { width: 100%; justify-content: center; }
+  .nav-links a { padding: 0.3rem 0.4rem; }
+}
+
+@media (max-width: 480px) {
+  .hero-left { padding: 1.5rem 1rem; }
+  .hero-right { height: 90vw; }
+  .hero-tag { letter-spacing: 0.15em; }
+  .hero-name { font-size: clamp(2.2rem, 9vw, 3rem); }
+  .hero-sub { font-size: 0.92rem; }
+  .stat { text-align: left; }
+  .stats { gap: 0.8rem; }
+  .section-label, .section-title { padding: 0 0.5rem; }
+  .svc, .portfolio-body, .work-item, .edu-card, .contact-info-block { padding-left: 1rem; padding-right: 1rem; }
 }
 
 /* LIGHTBOX */
