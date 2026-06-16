@@ -388,24 +388,24 @@
     </div>
   </div>
   <div class="reveal">
-    <form class="form-grid" onsubmit="handleSubmit(event)">
+    <form class="form-grid" action="https://formspree.io/muzakue@yahoo.com" method="POST" onsubmit="handleSubmit(event)">
       <div class="form-row">
         <div class="form-group">
           <label for="fname">First Name</label>
-          <input type="text" id="fname" placeholder="John" required>
+          <input type="text" id="fname" name="First Name" placeholder="John" required>
         </div>
         <div class="form-group">
           <label for="lname">Last Name</label>
-          <input type="text" id="lname" placeholder="Smith">
+          <input type="text" id="lname" name="Last Name" placeholder="Smith">
         </div>
       </div>
       <div class="form-group">
         <label for="email">Email Address</label>
-        <input type="email" id="email" placeholder="john@company.com" required>
+        <input type="email" id="email" name="Email" placeholder="john@company.com" required>
       </div>
       <div class="form-group">
         <label for="service">Service Needed</label>
-        <select id="service">
+        <select id="service" name="Service Needed">
           <option value="">Select a service...</option>
           <option>Email &amp; Inbox Management</option>
           <option>Calendar Scheduling &amp; Appointment Coordination</option>
@@ -417,7 +417,7 @@
       </div>
       <div class="form-group">
         <label for="message">Message</label>
-        <textarea id="message" placeholder="Tell me about your project and what you need..." required></textarea>
+        <textarea id="message" name="Message" placeholder="Tell me about your project and what you need..." required></textarea>
       </div>
       <button type="submit" class="btn-submit">Send Message &rarr;</button>
       <p class="form-note" id="form-msg"></p>
