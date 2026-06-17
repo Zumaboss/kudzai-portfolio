@@ -37,6 +37,7 @@ function initTheme() {
 }
 
 function handleSubmit(e) {
+  e.preventDefault();
   const form = e.target;
   const nameField = form.querySelector('#fname');
   const emailField = form.querySelector('#email');
@@ -63,15 +64,47 @@ function handleSubmit(e) {
   }
 
   if (!valid) {
-    e.preventDefault();
     msg.textContent = 'Please complete all required fields before sending.';
     msg.style.color = '#f96e6e';
     const firstInvalid = form.querySelector('.invalid');
     if (firstInvalid) firstInvalid.focus();
-  } else {
-    btn.textContent = 'Sending...';
-    btn.disabled = true;
+    return;
   }
+
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+  msg.style.color = 'var(--accent)';
+  msg.textContent = '';
+
+  fetch(form.action, {
+    method: form.method,
+    body: new FormData(form),
+    headers: {
+      'Accept': 'application/json'
+    }
+  }).then(response => {
+    if (response.ok) {
+      btn.textContent = 'Message Sent \u2713';
+      msg.textContent = 'Thank you! Kudzaiishe will be in touch shortly.';
+      form.reset();
+    } else {
+      response.json().then(data => {
+        if (data && data.errors) {
+          msg.textContent = data.errors.map(error => error.message).join(", ");
+        } else {
+          msg.textContent = 'Oops! There was a problem submitting your form.';
+        }
+        msg.style.color = '#f96e6e';
+        btn.textContent = 'Send Message \u2192';
+      });
+    }
+  }).catch(error => {
+    msg.textContent = 'Oops! There was a problem submitting your form.';
+    msg.style.color = '#f96e6e';
+    btn.textContent = 'Send Message \u2192';
+  }).finally(() => {
+    btn.disabled = false;
+  });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
