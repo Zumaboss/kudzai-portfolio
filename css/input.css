@@ -108,7 +108,7 @@
 /* ── Components ─────────────────────────────────────────── */
 @layer components {
   /* Nav */
-  nav {
+  body > nav {
     @apply fixed top-0 inset-x-0 z-[100] flex justify-between items-center gap-4 py-[1.4rem] px-20
            border-b border-edge backdrop-blur-[18px] transition-[padding] duration-300;
     background: var(--nav-bg);
@@ -472,7 +472,7 @@
 
 /* ── Responsive ─────────────────────────────────────────── */
 @media (max-width: 900px) {
-  nav { padding: 1rem 1.5rem; flex-wrap: wrap; }
+  body > nav { padding: 1rem 1.5rem; flex-wrap: wrap; }
   .nav-links { gap: 0.75rem; flex-wrap: wrap; justify-content: center; }
   .nav-links a { font-size: 0.7rem; }
   #home { grid-template-columns: 1fr; }
@@ -501,7 +501,7 @@
 }
 
 @media (max-width: 600px) {
-  nav { padding: 0.9rem 1rem; }
+  body > nav { padding: 0.9rem 1rem; }
   .hero-left { padding: 2rem 1rem; }
   .hero-right { height: 80vw; }
   .hero-tag { font-size: 0.6rem; }
