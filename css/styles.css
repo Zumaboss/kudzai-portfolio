@@ -1169,7 +1169,7 @@
   }
   .form-group input, .form-group textarea, .form-group select {
     background: var(--bg);
-    border: 1px solid var(--border);
+    border: 1px solid var(--border2);
     color: var(--text);
     font-family: var(--font-sans);
     border-radius: var(--radius-xl);
@@ -1190,13 +1190,22 @@
     -webkit-appearance: none;
   }
   .form-group input::placeholder, .form-group textarea::placeholder {
-    color: var(--faint);
+    color: var(--text-body);
+    @supports (color: color-mix(in lab, red, red)) {
+      color: color-mix(in oklab, var(--text-body) 55%, transparent);
+    }
+  }
+  .form-group input:hover, .form-group textarea:hover, .form-group select:hover {
+    border-color: var(--border2);
+    box-shadow: 0 0 0 3px rgba(184,148,63,0.06);
   }
   .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
     border-color: var(--accent-decor);
+    box-shadow: 0 0 0 3px rgba(184,148,63,0.12);
   }
   .form-group input.invalid, .form-group textarea.invalid, .form-group select.invalid {
     border-color: #f96e6e;
+    box-shadow: 0 0 0 3px rgba(249,110,110,0.1);
   }
   .form-group select option {
     background: var(--bg);
