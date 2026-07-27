@@ -189,6 +189,7 @@
   }
 }
 :root {
+  --tw-border-style: solid;
   --bg: #FAF7F2;
   --card: #F0EBE1;
   --card2: #E8E0D4;

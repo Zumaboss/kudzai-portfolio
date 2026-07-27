@@ -2,6 +2,7 @@
 
 /* ── Design tokens ──────────────────────────────────────── */
 :root {
+  --tw-border-style: solid; /* Tailwind v4 uses this var for border-style; must be seeded */
   --bg:           #FAF7F2;
   --card:         #F0EBE1;
   --card2:        #E8E0D4;
