@@ -1,191 +1,147 @@
-const obs = new IntersectionObserver((entries) => {
-  entries.forEach((e, i) => {
-    if (e.isIntersecting) {
-      setTimeout(() => e.target.classList.add('visible'), i * 55);
-      obs.unobserve(e.target);
+// Scroll reveal
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 55);
+      revealObserver.unobserve(entry.target);
     }
   });
 }, { threshold: 0.08 });
-document.querySelectorAll('.reveal').forEach(r => obs.observe(r));
 
-function updateThemeToggle(theme) {
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+// Theme
+const applyTheme = (theme) => {
+  document.documentElement.dataset.theme = theme;
   const toggle = document.querySelector('.theme-toggle');
   if (!toggle) return;
   const isDark = theme === 'dark';
   toggle.setAttribute('aria-pressed', String(isDark));
   toggle.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
-}
+};
 
-function setTheme(theme) {
-  document.documentElement.dataset.theme = theme;
-  updateThemeToggle(theme);
-}
+const initTheme = () => {
+  const saved = localStorage.getItem('theme');
+  const prefersDark = matchMedia('(prefers-color-scheme: dark)').matches;
+  applyTheme(saved ?? (prefersDark ? 'dark' : 'light'));
 
-function initTheme() {
-  const storedTheme = localStorage.getItem('theme');
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const theme = storedTheme || (prefersDark ? 'dark' : 'light');
-  setTheme(theme);
-
-  const toggle = document.querySelector('.theme-toggle');
-  if (!toggle) return;
-  toggle.addEventListener('click', () => {
-    const nextTheme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
-    localStorage.setItem('theme', nextTheme);
-    setTheme(nextTheme);
+  document.querySelector('.theme-toggle')?.addEventListener('click', () => {
+    const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('theme', next);
+    applyTheme(next);
   });
-}
+};
 
-function handleSubmit(e) {
+// Contact form
+const handleSubmit = (e) => {
   e.preventDefault();
-  const form = e.target;
-  const nameField = form.querySelector('#fname');
-  const emailField = form.querySelector('#email');
-  const messageField = form.querySelector('#message');
-  const serviceField = form.querySelector('#service');
+  const form = e.currentTarget;
+  const fields = {
+    name:    form.querySelector('#fname'),
+    email:   form.querySelector('#email'),
+    message: form.querySelector('#message'),
+  };
   const btn = form.querySelector('.btn-submit');
   const msg = document.getElementById('form-msg');
 
-  [nameField, emailField, messageField].forEach(field => field.classList.remove('invalid'));
+  Object.values(fields).forEach(f => f.classList.remove('invalid'));
   msg.textContent = '';
 
-  let valid = true;
-  if (!nameField.value.trim()) {
-    nameField.classList.add('invalid');
-    valid = false;
-  }
-  if (!emailField.value.trim() || !emailField.checkValidity()) {
-    emailField.classList.add('invalid');
-    valid = false;
-  }
-  if (!messageField.value.trim()) {
-    messageField.classList.add('invalid');
-    valid = false;
-  }
+  const invalid = Object.values(fields).filter(
+    f => !f.value.trim() || (f.type === 'email' && !f.checkValidity())
+  );
 
-  if (!valid) {
+  if (invalid.length) {
+    invalid.forEach(f => f.classList.add('invalid'));
     msg.textContent = 'Please complete all required fields before sending.';
     msg.style.color = '#f96e6e';
-    const firstInvalid = form.querySelector('.invalid');
-    if (firstInvalid) firstInvalid.focus();
+    invalid[0].focus();
     return;
   }
 
-  btn.textContent = 'Sending...';
+  btn.textContent = 'Sending…';
   btn.disabled = true;
-  msg.style.color = 'var(--accent)';
-  msg.textContent = '';
 
   fetch(form.action, {
-    method: form.method,
+    method: 'POST',
     body: new FormData(form),
-    headers: {
-      'Accept': 'application/json'
-    }
-  }).then(response => {
-    if (response.ok) {
-      btn.textContent = 'Message Sent \u2713';
-      msg.textContent = 'Thank you! Kudzaiishe will be in touch shortly.';
-      form.reset();
-    } else {
-      response.json().then(data => {
-        if (data && data.errors) {
-          msg.textContent = data.errors.map(error => error.message).join(", ");
-        } else {
-          msg.textContent = 'Oops! There was a problem submitting your form.';
-        }
+    headers: { Accept: 'application/json' },
+  })
+    .then(async res => {
+      if (res.ok) {
+        btn.textContent = 'Message Sent ✓';
+        msg.textContent = 'Thank you! Kudzaiishe will be in touch shortly.';
+        msg.style.color = 'var(--accent-dk)';
+        form.reset();
+      } else {
+        const data = await res.json().catch(() => null);
+        msg.textContent =
+          data?.errors?.map(err => err.message).join(', ') ??
+          'Oops! There was a problem submitting your form.';
         msg.style.color = '#f96e6e';
-        btn.textContent = 'Send Message \u2192';
-      });
-    }
-  }).catch(error => {
-    msg.textContent = 'Oops! There was a problem submitting your form.';
-    msg.style.color = '#f96e6e';
-    btn.textContent = 'Send Message \u2192';
-  }).finally(() => {
-    btn.disabled = false;
+        btn.textContent = 'Send Message →';
+      }
+    })
+    .catch(() => {
+      msg.textContent = 'Oops! There was a problem submitting your form.';
+      msg.style.color = '#f96e6e';
+      btn.textContent = 'Send Message →';
+    })
+    .finally(() => { btn.disabled = false; });
+};
+
+// Lightbox (IIFE keeps state private)
+(() => {
+  const lightbox = document.getElementById('lightbox');
+  const lbImg     = lightbox?.querySelector('.lb-img');
+  const lbCaption = lightbox?.querySelector('.lb-caption');
+  const lbClose   = lightbox?.querySelector('.lb-close');
+  let lastFocus   = null;
+
+  const close = () => {
+    lightbox?.classList.remove('active');
+    lightbox?.setAttribute('aria-hidden', 'true');
+    if (lbImg)     lbImg.src = '';
+    if (lbCaption) lbCaption.textContent = '';
+    document.body.style.overflow = '';
+    lastFocus?.focus();
+  };
+
+  const open = (src, alt) => {
+    if (!lightbox || !lbImg || !lbCaption) return;
+    lastFocus = document.activeElement;
+    lbImg.src = src;
+    lbImg.alt = alt ?? '';
+    lbCaption.textContent = alt ?? '';
+    lightbox.classList.add('active');
+    lightbox.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    lbClose?.focus();
+  };
+
+  lbClose?.addEventListener('click', close);
+  lightbox?.addEventListener('click', e => { if (e.target === lightbox) close(); });
+  document.addEventListener('keydown', e => {
+    if (!lightbox?.classList.contains('active')) return;
+    if (e.key === 'Escape') { close(); return; }
+    if (e.key === 'Tab') { e.preventDefault(); lbClose?.focus(); }
   });
-}
 
-document.addEventListener('DOMContentLoaded', () => {
-  const form = document.querySelector('form.form-grid');
-  if (form) form.addEventListener('submit', handleSubmit);
-  initTheme();
-});
-
-// Lightbox functionality
-const lightbox = document.getElementById('lightbox');
-const lbImg = lightbox?.querySelector('.lb-img');
-const lbCaption = lightbox?.querySelector('.lb-caption');
-const lbClose = lightbox?.querySelector('.lb-close');
-let lastFocusedElement = null;
-
-function openLightbox(src, alt) {
-  if (!lightbox || !lbImg || !lbCaption || !lbClose) return;
-
-  lastFocusedElement = document.activeElement;
-  lbImg.src = src;
-  lbImg.alt = alt || '';
-  lbCaption.textContent = alt || '';
-  lightbox.classList.add('active');
-  lightbox.setAttribute('aria-hidden', 'false');
-  document.body.style.overflow = 'hidden';
-  lbClose.focus();
-}
-
-function closeLightbox() {
-  if (!lightbox || !lbImg || !lbCaption) return;
-
-  lightbox.classList.remove('active');
-  lightbox.setAttribute('aria-hidden', 'true');
-  lbImg.src = '';
-  lbCaption.textContent = '';
-  document.body.style.overflow = '';
-  if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
-    lastFocusedElement.focus();
-  }
-}
-
-function handleLightboxKeydown(e) {
-  if (!lightbox?.classList.contains('active')) return;
-  if (e.key === 'Escape') {
-    closeLightbox();
-    return;
-  }
-
-  if (e.key === 'Tab') {
-    e.preventDefault();
-    lbClose.focus();
-  }
-}
-
-function registerLightboxTriggers() {
-  const thumbnails = document.querySelectorAll('.portfolio-gallery img, .portfolio-img img');
-  thumbnails.forEach(img => {
+  document.querySelectorAll('.portfolio-gallery img, .portfolio-img img').forEach(img => {
     img.tabIndex = 0;
-    img.addEventListener('click', (e) => {
-      openLightbox(e.currentTarget.src, e.currentTarget.alt || e.currentTarget.getAttribute('data-caption') || '');
+    img.addEventListener('click', e => {
+      open(e.currentTarget.src, e.currentTarget.alt || e.currentTarget.dataset.caption || '');
     });
-    img.addEventListener('keydown', (e) => {
+    img.addEventListener('keydown', e => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        openLightbox(e.currentTarget.src, e.currentTarget.alt || e.currentTarget.getAttribute('data-caption') || '');
+        open(e.currentTarget.src, e.currentTarget.alt || e.currentTarget.dataset.caption || '');
       }
     });
   });
+})();
 
-  if (lbClose) {
-    lbClose.addEventListener('click', closeLightbox);
-  }
-  if (lightbox) {
-    lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
-    lightbox.addEventListener('keydown', handleLightboxKeydown);
-  }
-  document.addEventListener('keydown', handleLightboxKeydown);
-}
-
-if (document.readyState !== 'loading') {
-  registerLightboxTriggers();
-} else {
-  document.addEventListener('DOMContentLoaded', registerLightboxTriggers);
-}
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelector('form.form-grid')?.addEventListener('submit', handleSubmit);
+  initTheme();
+});

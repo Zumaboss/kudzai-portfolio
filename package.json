@@ -1,0 +1,26 @@
+{
+  "name": "kudzai-portfolio",
+  "version": "1.0.0",
+  "description": "Static single-page portfolio converted to a proper website structure.",
+  "main": "index.js",
+  "scripts": {
+    "build": "tailwindcss -i css/input.css -o css/styles.css --minify && node -e \"const fs=require('fs'),p='css/styles.css',c=fs.readFileSync(p,'utf8');fs.writeFileSync(p,c.replace(/\\n\\s+vertical-align:\\s*middle;/g,''));\"",
+    "watch": "tailwindcss -i css/input.css -o css/styles.css --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Zumaboss/kudzai-portfolio.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Zumaboss/kudzai-portfolio/issues"
+  },
+  "homepage": "https://github.com/Zumaboss/kudzai-portfolio#readme",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "tailwindcss": "^4.3.3"
+  }
+}
