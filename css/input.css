@@ -284,6 +284,7 @@
   /* Portfolio */
   #portfolio { @apply py-28 px-20 bg-surface; }
   .portfolio-grid { @apply grid grid-cols-2 gap-6; }
+  .section-note { @apply text-[0.88rem] font-light leading-[1.85] text-subtle max-w-[40rem]; margin: -2.5rem 0 3rem; }
   .portfolio-card {
     @apply bg-raised border border-edge overflow-hidden rounded-[1.8rem] transition-all duration-300;
     box-shadow: var(--shadow-card);

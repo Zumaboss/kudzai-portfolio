@@ -70,7 +70,7 @@ const handleSubmit = (e) => {
     .then(async res => {
       if (res.ok) {
         btn.textContent = 'Message Sent ✓';
-        msg.textContent = 'Thank you! Kudzaiishe will be in touch shortly.';
+        msg.textContent = 'Thank you! Kudzaishe will be in touch shortly.';
         msg.style.color = 'var(--accent-dk)';
         form.reset();
       } else {

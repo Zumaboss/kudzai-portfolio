@@ -1,4 +1,4 @@
-# Kudzaiishe Muza — Portfolio
+# Kudzaishe Muza — Portfolio
 
 Static single-page portfolio converted to a proper website structure.
 

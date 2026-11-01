@@ -5,7 +5,7 @@ root = Path(__file__).resolve().parent.parent
 images = [
     'images/design-nursery-wall-art.png',
     'images/design-printables-mockup.png',
-    'images/calendar-sarah-johnson.png',
+    'images/calendar-sample.png',
     'images/calendar-scheduled-meetings.png',
     'images/calendar-meeting-prep.png',
 ]
